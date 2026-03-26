@@ -9,11 +9,11 @@ import { Outro } from "./components/Outro";
 
 // Timeline constants
 const INTRO_FRAMES = 90;          // 3s
-const SLIDE_FRAMES = 150;         // 5s per team
+const SLIDE_FRAMES = 210;         // 7s per team
 const TRANSITION_FRAMES = 15;     // 0.5s wipe overlap
 const OUTRO_FRAMES = 90;          // 3s
 
-// TransitionSeries total: 10 slides × 150 - 9 transitions × 15 = 1500 - 135 = 1365
+// TransitionSeries total: 10 slides × 210 - 9 transitions × 15 = 2100 - 135 = 1965
 const TRANSITION_SERIES_FRAMES =
   teams.length * SLIDE_FRAMES - (teams.length - 1) * TRANSITION_FRAMES;
 
@@ -50,7 +50,7 @@ export const F12025: React.FC = () => {
         </TransitionSeries>
       </Sequence>
 
-      {/* Outro: frames 1455–1544 */}
+      {/* Outro: frames 2055–2144 */}
       <Sequence from={OUTRO_START} durationInFrames={OUTRO_FRAMES}>
         <Outro />
       </Sequence>

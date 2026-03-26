@@ -22,6 +22,7 @@ interface TeamSlideProps {
 }
 
 const CHAR_STAGGER = 2; // frames between each character of the team name
+const SIDE_INSET = 24; // gap from canvas edge to driver portrait
 
 export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
   const frame = useCurrentFrame();
@@ -49,16 +50,11 @@ export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
   const carX = interpolate(carEntrance, [0, 1], [500, 0]);
   const carEntranceScale = interpolate(carEntrance, [0, 1], [0.88, 1.0]);
   // Ken Burns: adds slow zoom after car settles
-  const carKenBurns = interpolate(frame, [30, 150], [0, 0.04], {
+  const carKenBurns = interpolate(frame, [30, 210], [0, 0.04], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
   const carScale = carEntranceScale + carKenBurns;
-
-  // === Strip glow: pulses brighter on entry then settles ===
-  const glowSize = interpolate(frame, [0, 12, 45, 150], [0, 40, 20, 20], {
-    extrapolateRight: "clamp",
-  });
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000000" }}>
@@ -72,13 +68,13 @@ export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
         }}
       />
 
-      {/* Driver 1 — full height portrait, left edge */}
-      <div style={{ position: "absolute", left: 0, top: 0 }}>
+      {/* Driver 1 — full height portrait, left side with inset */}
+      <div style={{ position: "absolute", left: SIDE_INSET, top: 0 }}>
         <DriverCard driver={team.drivers[0]} stripColor={team.stripColor} side="left" />
       </div>
 
-      {/* Driver 2 — full height portrait, right edge */}
-      <div style={{ position: "absolute", right: 0, top: 0 }}>
+      {/* Driver 2 — full height portrait, right side with inset */}
+      <div style={{ position: "absolute", right: SIDE_INSET, top: 0 }}>
         <DriverCard driver={team.drivers[1]} stripColor={team.stripColor} side="right" />
       </div>
 
@@ -87,7 +83,7 @@ export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
         style={{
           position: "absolute",
           top: 36,
-          left: DRIVER_CARD_WIDTH + 28,
+          left: DRIVER_CARD_WIDTH + SIDE_INSET + 28,
           opacity: logoOpacity,
         }}
       >
@@ -102,8 +98,8 @@ export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
         style={{
           position: "absolute",
           top: 38,
-          left: DRIVER_CARD_WIDTH,
-          right: DRIVER_CARD_WIDTH,
+          left: DRIVER_CARD_WIDTH + SIDE_INSET,
+          right: DRIVER_CARD_WIDTH + SIDE_INSET,
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
@@ -145,8 +141,8 @@ export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
       <div
         style={{
           position: "absolute",
-          left: DRIVER_CARD_WIDTH,
-          right: DRIVER_CARD_WIDTH,
+          left: DRIVER_CARD_WIDTH + SIDE_INSET,
+          right: DRIVER_CARD_WIDTH + SIDE_INSET,
           top: 120,
           bottom: 0,
           display: "flex",
@@ -165,32 +161,6 @@ export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
           }}
         />
       </div>
-
-      {/* Animated glow strip — inner edge left (between left portrait and center) */}
-      <div
-        style={{
-          position: "absolute",
-          left: DRIVER_CARD_WIDTH,
-          top: 0,
-          bottom: 0,
-          width: 4,
-          backgroundColor: team.stripColor,
-          boxShadow: `0 0 ${glowSize}px ${team.stripColor}`,
-        }}
-      />
-
-      {/* Animated glow strip — inner edge right */}
-      <div
-        style={{
-          position: "absolute",
-          right: DRIVER_CARD_WIDTH,
-          top: 0,
-          bottom: 0,
-          width: 4,
-          backgroundColor: team.stripColor,
-          boxShadow: `0 0 ${glowSize}px ${team.stripColor}`,
-        }}
-      />
 
     </AbsoluteFill>
   );

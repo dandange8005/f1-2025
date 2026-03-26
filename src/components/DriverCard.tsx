@@ -80,7 +80,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
           bottom: 0,
           left: 0,
           right: 0,
-          height: 340,
+          height: 420,
           background: "linear-gradient(to bottom, transparent, rgba(0,0,0,0.98))",
           pointerEvents: "none",
         }}
@@ -103,12 +103,12 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         <div
           style={{
             color: stripColor,
-            fontSize: 62,
+            fontSize: 80,
             fontWeight: 700,
             fontFamily,
             lineHeight: 1,
-            marginBottom: 2,
-            textShadow: `0 0 24px ${stripColor}99`,
+            marginBottom: 4,
+            textShadow: `0 0 28px ${stripColor}99`,
           }}
         >
           #{driver.number}
@@ -118,7 +118,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         <div
           style={{
             color: "white",
-            fontSize: 22,
+            fontSize: 30,
             fontWeight: 600,
             fontFamily,
             lineHeight: 1.2,
@@ -131,7 +131,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         <div
           style={{
             color: "white",
-            fontSize: 34,
+            fontSize: 44,
             fontWeight: 700,
             fontFamily,
             textTransform: "uppercase",
@@ -146,7 +146,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         <div
           style={{
             borderTop: `1px solid ${stripColor}55`,
-            margin: "10px 0",
+            margin: "12px 0",
           }}
         />
 
@@ -154,11 +154,11 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         <div
           style={{
             color: "#cccccc",
-            fontSize: 16,
+            fontSize: 21,
             fontFamily,
             display: "flex",
             alignItems: "center",
-            gap: 6,
+            gap: 8,
           }}
         >
           <span>{driver.flag}</span>
