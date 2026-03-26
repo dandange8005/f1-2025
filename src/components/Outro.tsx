@@ -10,16 +10,16 @@ const { fontFamily } = loadFont("normal", {
 export const Outro: React.FC = () => {
   const frame = useCurrentFrame(); // 0–89
 
-  // Text: fade in 0–20, hold, fade out 60–90
+  // Text: fade in 0–20, hold, fade out 60–89
   const textOpacity = interpolate(
     frame,
-    [0, 20, 60, 90],
+    [0, 20, 60, 89],
     [0, 1, 1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
   );
 
-  // Entire slide fades to black 60–90
-  const slideOpacity = interpolate(frame, [60, 90], [1, 0], {
+  // Entire slide fades to black 60–89
+  const slideOpacity = interpolate(frame, [60, 89], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
