@@ -14,50 +14,88 @@ interface DriverCardProps {
   side: "left" | "right";
 }
 
+export const DRIVER_CARD_WIDTH = 330;
+
 export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Slide in from respective side, starting at frame 10
-  const slideProgress = spring({
-    frame: Math.max(0, frame - 10),
+  // Clip-path reveal from respective side (starts at frame 8)
+  const revealSpring = spring({
+    frame: Math.max(0, frame - 8),
     fps,
-    config: { damping: 200, stiffness: 180 },
-    durationInFrames: 20,
+    config: { damping: 95, stiffness: 140 },
+    durationInFrames: 28,
   });
-  const translateX = interpolate(slideProgress, [0, 1], [side === "left" ? -350 : 350, 0]);
-  const opacity = interpolate(frame, [10, 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const revealPercent = interpolate(revealSpring, [0, 1], [100, 0]);
+  const clipPath =
+    side === "left"
+      ? `inset(0 ${revealPercent}% 0 0)`
+      : `inset(0 0 0 ${revealPercent}%)`;
+
+  // Info card slides up from bottom (starts at frame 22)
+  const infoSpring = spring({
+    frame: Math.max(0, frame - 22),
+    fps,
+    config: { damping: 85, stiffness: 200 },
+    durationInFrames: 22,
+  });
+  const infoY = interpolate(infoSpring, [0, 1], [80, 0]);
+  const infoOpacity = interpolate(frame, [22, 34], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
   return (
     <div
       style={{
-        transform: `translateX(${translateX}px)`,
-        opacity,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        width: 240,
+        width: DRIVER_CARD_WIDTH,
+        height: 1080,
+        position: "relative",
+        clipPath,
+        borderRight: side === "left" ? `4px solid ${stripColor}` : "none",
+        borderLeft: side === "right" ? `4px solid ${stripColor}` : "none",
+        boxShadow:
+          side === "left"
+            ? `6px 0 30px ${stripColor}44`
+            : `-6px 0 30px ${stripColor}44`,
       }}
     >
-      {/* Driver headshot */}
+      {/* Full-height portrait */}
       <Img
         src={staticFile(`images/drivers/${driver.image}`)}
         style={{
-          width: 240,
-          height: 290,
+          width: "100%",
+          height: "100%",
           objectFit: "cover",
           objectPosition: "top center",
           display: "block",
         }}
       />
 
-      {/* Lower-third broadcast card */}
+      {/* Bottom gradient fade into black */}
       <div
         style={{
-          backgroundColor: "rgba(0, 0, 0, 0.82)",
-          borderLeft: `4px solid ${stripColor}`,
-          padding: "10px 14px",
-          width: "100%",
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 340,
+          background: "linear-gradient(to bottom, transparent, rgba(0,0,0,0.98))",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Info overlay — bottom of portrait */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: "0 18px 28px 18px",
+          transform: `translateY(${infoY}px)`,
+          opacity: infoOpacity,
           boxSizing: "border-box",
         }}
       >
@@ -65,11 +103,12 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         <div
           style={{
             color: stripColor,
-            fontSize: 42,
+            fontSize: 62,
             fontWeight: 700,
             fontFamily,
             lineHeight: 1,
             marginBottom: 2,
+            textShadow: `0 0 24px ${stripColor}99`,
           }}
         >
           #{driver.number}
@@ -79,7 +118,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         <div
           style={{
             color: "white",
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: 600,
             fontFamily,
             lineHeight: 1.2,
@@ -92,12 +131,12 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         <div
           style={{
             color: "white",
-            fontSize: 28,
+            fontSize: 34,
             fontWeight: 700,
             fontFamily,
-            lineHeight: 1.1,
             textTransform: "uppercase",
-            letterSpacing: 1,
+            letterSpacing: 2,
+            lineHeight: 1.1,
           }}
         >
           {driver.lastName}
@@ -106,8 +145,8 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         {/* Divider */}
         <div
           style={{
-            borderTop: "1px solid rgba(255,255,255,0.2)",
-            margin: "8px 0",
+            borderTop: `1px solid ${stripColor}55`,
+            margin: "10px 0",
           }}
         />
 
@@ -115,7 +154,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         <div
           style={{
             color: "#cccccc",
-            fontSize: 15,
+            fontSize: 16,
             fontFamily,
             display: "flex",
             alignItems: "center",
@@ -124,7 +163,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         >
           <span>{driver.flag}</span>
           <span>{driver.nationality}</span>
-          <span style={{ color: "rgba(255,255,255,0.4)" }}>·</span>
+          <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span>
           <span>{driver.age} yrs</span>
         </div>
       </div>
