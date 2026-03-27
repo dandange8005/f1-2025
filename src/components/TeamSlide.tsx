@@ -52,7 +52,10 @@ export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
     config: { damping: 90, stiffness: 180 },
     durationInFrames: 20,
   });
-  const underlineScale = interpolate(underlineSpring, [0, 1], [0, 1]);
+  const underlineScale = interpolate(underlineSpring, [0, 1], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
   // === Car: drives in from right + scale, then Ken Burns ===
   const carEntrance = spring({
