@@ -239,7 +239,7 @@ export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
             <div
               style={{
                 fontFamily,
-                fontSize: 11,
+                fontSize: 18,
                 fontWeight: 600,
                 color: team.stripColor,
                 letterSpacing: 3,
@@ -251,7 +251,7 @@ export const TeamSlide: React.FC<TeamSlideProps> = ({ team }) => {
             <div
               style={{
                 fontFamily,
-                fontSize: 18,
+                fontSize: 32,
                 fontWeight: 700,
                 color: "white",
                 letterSpacing: 1,

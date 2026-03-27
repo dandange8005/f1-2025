@@ -58,8 +58,6 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         height: 1080,
         position: "relative",
         clipPath,
-        borderRight: side === "left" ? `4px solid ${stripColor}` : "none",
-        borderLeft: side === "right" ? `4px solid ${stripColor}` : "none",
         boxShadow:
           side === "left"
             ? `6px 0 30px ${stripColor}44`
