@@ -33,18 +33,23 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
       ? `inset(0 ${revealPercent}% 0 0)`
       : `inset(0 0 0 ${revealPercent}%)`;
 
-  // Info card slides up from bottom (starts at frame 22)
+  // Info card: side-aware slide (starts at frame 22)
   const infoSpring = spring({
     frame: Math.max(0, frame - 22),
     fps,
     config: { damping: 85, stiffness: 200 },
     durationInFrames: 22,
   });
-  const infoY = interpolate(infoSpring, [0, 1], [80, 0]);
+  // Left driver slides in from left (negative X), right from right (positive X)
+  const slideFrom = side === "left" ? -80 : 80;
+  const infoX = interpolate(infoSpring, [0, 1], [slideFrom, 0]);
   const infoOpacity = interpolate(frame, [22, 34], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
+
+  // Driver number glow: spread animates from 0 to 28px with infoSpring
+  const glowSpread = interpolate(infoSpring, [0, 1], [0, 28]);
 
   return (
     <div
@@ -73,7 +78,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         }}
       />
 
-      {/* Bottom gradient fade into black */}
+      {/* Bottom gradient fade */}
       <div
         style={{
           position: "absolute",
@@ -86,7 +91,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
         }}
       />
 
-      {/* Info overlay — bottom of portrait */}
+      {/* Info overlay — slides in from side */}
       <div
         style={{
           position: "absolute",
@@ -94,12 +99,12 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
           left: 0,
           right: 0,
           padding: "0 18px 28px 18px",
-          transform: `translateY(${infoY}px)`,
+          transform: `translateX(${infoX}px)`,
           opacity: infoOpacity,
           boxSizing: "border-box",
         }}
       >
-        {/* Driver number */}
+        {/* Driver number with animated glow */}
         <div
           style={{
             color: stripColor,
@@ -108,7 +113,7 @@ export const DriverCard: React.FC<DriverCardProps> = ({ driver, stripColor, side
             fontFamily,
             lineHeight: 1,
             marginBottom: 4,
-            textShadow: `0 0 28px ${stripColor}99`,
+            textShadow: `0 0 ${glowSpread}px ${stripColor}99`,
           }}
         >
           #{driver.number}
